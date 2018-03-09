@@ -1,15 +1,15 @@
-class TasklistController < ApplicationController
+class TasksController < ApplicationController
   
   def index
-    @tasklists = Task.all
+    @tasks = Task.all.page(params[:page])
   end
   
   def create
-    @tasklist = Task.new(task_params)
+    @task = Task.new(task_params)
     
-    if @tasklist.save
+    if @task.save
       flash[:success] = "タスクが正常に登録されました"
-      redirect_to tasklist_path(@tasklist.id)
+      redirect_to task_path(@task.id)
     else
       flash.now[:danger] = "タスクが登録されませんでした"
       render :new
@@ -17,7 +17,7 @@ class TasklistController < ApplicationController
   end
   
   def new
-    @tasklist = Task.new
+    @task = Task.new
   end
   
   def edit
@@ -31,9 +31,9 @@ class TasklistController < ApplicationController
   def update
     set_task
     
-    if @tasklist.update(task_params)
+    if @task.update(task_params)
       flash[:success] = "タスクが正常に変更されました"
-      redirect_to tasklist_path(@tasklist)
+      redirect_to task_path(@task)
     else
       flash.now[:danger] = "タスクが変更されませんでした"
       render :edit
@@ -42,7 +42,7 @@ class TasklistController < ApplicationController
   
   def destroy
     set_task
-    @tasklist.destroy
+    @task.destroy
 
     flash[:success] = 'タスクは正常に削除されました'
     redirect_to ("/")
@@ -51,7 +51,7 @@ class TasklistController < ApplicationController
   private
 
   def set_task
-    @tasklist = Task.find(params[:id])
+    @task = Task.find(params[:id])
   end
 
   # Strong Parameter
